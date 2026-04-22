@@ -1,0 +1,54 @@
+/* font: import ================================================ */
+@font-face {
+  font-family: 'variableFont';
+  src: url('./font/RobotoFlex.ttf') format('truetype');
+}
+
+
+/* Layout ================================================ */
+html,body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 1s ease-in-out;
+  /* background-color: #ff0000; */
+  /* background-image: url('./img/MultipleFormats.jpg'); */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+
+/* text ================================================ */
+#mainText1 {
+  font-family: 'variableFont';
+  font-size: 48px;
+  color: black;
+  text-align: center;
+	font-variation-settings: "opsz" 14, "wght" 400, "GRAD" 0, "wdth" 100, "slnt" 0, "XOPQ" 96, "YOPQ" 79, "XTRA" 468, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  transition: font-size 1s ease-in-out, font-variation-settings 1s ease-in-out;
+}
+
+#mainText2 {
+  font-family: 'variableFont';
+  font-size: 48px;
+  color: black;
+  text-align: center;
+	font-variation-settings: "opsz" 14, "wght" 400, "GRAD" 0, "wdth" 100, "slnt" 0, "XOPQ" 96, "YOPQ" 79, "XTRA" 468, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  transition: font-size 1s ease-in-out, font-variation-settings 1s ease-in-out;
+}
+
+/* Image ================================================ */
+#image1 {
+  width: 300px;
+  padding-top: 20px;
+}
