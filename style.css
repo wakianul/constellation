@@ -16,7 +16,7 @@ html,body {
 
 body {
   display: flex;
-  overflow: auto;
+  overflow: hidden;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -29,13 +29,11 @@ body {
 body.day-mode {
   background: white;
   color: black;
-  overflow:hidden;
 }
 
 body.night-mode {
   background: black;
   color: white;
-  overflow:auto;
 } 
 
 /* text ================================================ */
@@ -73,8 +71,8 @@ body.day-mode #mainText2 {
 }
 body.night-mode #mainText2 {
   position: absolute;
-  top: 1000px;
-  left: 1225px;
+  top: 50%;
+  left: 50%;
   transform: translateX(-50%);
 }
 
@@ -85,14 +83,35 @@ body.night-mode #mainText2 {
 }
 
 /* Web Cam ================================================ */
-video {
+#webcam-container {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  bottom: 20px;
+  right: 20px;
+  width: 160px;
+  height: 120px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.5s;
+}
+
+body.day-mode #webcam-container {
+  display: none; /* 白天不需要摄像头 */
+}
+
+#webcam-container:hover {
+  opacity: 1; /* 鼠标悬停时变亮，方便检查补光 */
+}
+
+#video {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   transform: scaleX(-1);
-  opacity: 1;
-  z-index: -100;
+  filter: grayscale(1) contrast(1.2);
 }
 
 .box {
@@ -105,15 +124,6 @@ video {
 .box img {
   width: 100%;
   display: block;
-}
-
-#starLayer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2500px;
-  height: 2000px;
-  pointer-events: none; 
 }
 
 body.night-clear #starLayer{

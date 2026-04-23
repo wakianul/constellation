@@ -1,0 +1,229 @@
+/* font: import ================================================ */
+@font-face {
+  font-family: 'variableFont';
+  src: url('font/Tiny.ttf') format('truetype');
+}
+
+
+/* Layout ================================================ */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 1s ease-in-out, color 1s ease-in-out;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+body.day-mode {
+  background: white;
+  color: black;
+}
+
+body.night-mode {
+  background: black;
+  color: white;
+}
+
+
+/* Webcam ================================================ */
+#webcam-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #111;
+  z-index: 0;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+body.day-mode #webcam-container {
+  display: none;
+}
+
+#video,
+#output_canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#video {
+  transform: scaleX(-1);
+  filter: grayscale(1) contrast(1.2);
+}
+
+
+/* text ================================================ */
+#mainText1 {
+  font-family: 'variableFont';
+  font-size: 30px;
+  color: white;
+  text-align: center;
+  position: fixed;
+  z-index: 10;
+  top: 20px;
+  left: 20px;
+  font-variation-settings: "wght" 103.5041;
+  transition: all 1s ease-in-out;
+}
+
+#mainText2 {
+  font-family: 'variableFont';
+  font-size: 40px;
+  color: rgb(0, 0, 0);
+  z-index: 10;
+  position: fixed;
+  text-align: center;
+  left: 50%;
+  font-variation-settings: "opsz" 14, "wght" 70, "GRAD" 0, "wdth" 100, "slnt" 0, "XOPQ" 96, "YOPQ" 79, "XTRA" 468, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  transition: all 1s ease-in-out;
+}
+
+/* 白天文字状态 */
+body.day-mode #mainText1 {
+  top: 10px;
+  left: 10px;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: black;
+  width: 70%;
+}
+
+body.day-mode #mainText2 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: black;
+  width: 80%;
+}
+
+/* 晚上文字状态 */
+body.night-mode #mainText1 {
+  top: 10px;
+  left: 10px;
+  transform: none;
+  font-size: 30px;
+  color: white;
+  width: auto;
+}
+
+body.night-mode #mainText2 {
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 60px;
+  color: white;
+  width: 100%;
+}
+
+
+/* Hands ================================================ */
+.handUI {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  min-height: 100px;
+  padding: 10px;
+  transform: translate(-50%, 0);
+  z-index: 12;
+  font-family: 'variableFont';
+  font-size: 100px;
+  font-variation-settings: "opsz" 14, "wght" 400, "GRAD" 0, "wdth" 100, "slnt" 0, "XOPQ" 96, "YOPQ" 79, "XTRA" 468, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  color: blue;
+}
+
+body.day-mode .handUI {
+  display: none;
+}
+
+body.night-mode .handUI {
+  display: flex;
+}
+
+.handUI img {
+  width: 300px;
+  margin-bottom: 5px;
+}
+
+#left {
+  border-color: cyan;
+}
+
+#right {
+  border-color: lime;
+}
+
+
+/* Item ================================================ */
+.box {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  z-index: 8;
+  will-change: left, top;
+}
+
+body.day-mode .box {
+  display: none;
+}
+
+body.night-mode .box {
+  display: flex;
+}
+
+
+/* star layer ================================================ */
+#starLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+body.day-mode #starLayer {
+  display: none;
+}
+
+body.night-mode #starLayer {
+  display: block;
+}
+
+
+/* Show ================================================ */
+#special {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 100%;
+  font-family: 'variableFont';
+  font-size: 100px;
+  color: red;
+  text-align: center;
+  z-index: 20;
+}

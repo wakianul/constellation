@@ -11,20 +11,10 @@ const BOSTON = {
 // =================================================
 let weatherState = {
   isDay: true,
-  weatherCode: null,
   sunrise: null,
   sunset: null,
   temperature: null
 };
-
-// =================================================
-// 🌧 Rain-related WMO weather codes
-// Open-Meteo uses WMO weather codes
-// =================================================
-function isRainCode(code) {
-  const rainCodes = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99];
-  return rainCodes.includes(code);
-}
 
 // =================================================
 // 🕒 Format countdown text
@@ -82,11 +72,6 @@ function updateImage() {
 
   image.style.display = "block";
 
-  // 这里先留空，避免因为图片路径不存在报错
-  // 你后面可以自己换成：
-  // image.src = "./img/stars-clear.png";
-  // image.src = "./img/stars-rain.png";
-
   if (weatherState.isRain) {
     image.alt = "Rain mode";
     image.removeAttribute("src");
@@ -115,33 +100,25 @@ async function fetchWeatherData() {
     const current = data.current;
     const daily = data.daily;
 
-    weatherState.weatherCode = current.weather_code;
-    weatherState.temperature = current.temperature_2m;
-    weatherState.isDay = current.is_day === 1;
-    weatherState.isDay = false; // 🔥 强制夜晚
-  //  weatherState.isRain = true; // 测雨天
-  // weatherState.isRain = isRainCode(current.weather_code);
+    weatherState.isDay = current?.is_day === 1;
+    weatherState.temperature = current?.temperature_2m ?? null;
     weatherState.sunrise = daily?.sunrise?.[0] || null;
-    weatherState.suns = daily?.sunset?.[0] || null;
+    weatherState.sunset = daily?.sunset?.[0] || null;
 
-applyTheme();
-if (weatherState.isDay) {
-  stopCamera();
-} else {
-  await startCamera();
-}
-updateStars();
-// updateRain();
-updateImage();
-updateDateTime();
+    applyTheme();
+
+    if (weatherState.isDay) {
+      stopCamera();
+    } else {
+      await startCamera();
+    }
+
+    updateStars();
+    updateImage();
+    updateDateTime();
 
   } catch (error) {
     console.error("Failed to fetch weather data:", error);
-
-    const mainText2 = document.querySelector("#mainText2");
-    if (mainText2) {
-      mainText2.textContent = "Unable to load Boston weather right now.";
-    }
   }
 }
 
@@ -194,22 +171,24 @@ function updateDateTime() {
   if (!mainText2) return;
 
   if (weatherState.isDay) {
-    if (weatherState.sunset) {
-      const sunsetTime = new Date(weatherState.sunset);
-      const msLeft = sunsetTime - now;
-      const countdown = formatTimeLeft(msLeft);
+  if (weatherState.sunset) {
+    const sunsetTime = new Date(weatherState.sunset);
+    const msLeft = sunsetTime - now;
+    const countdown = formatTimeLeft(msLeft);
 
-      mainText2.textContent = `Boston is still in daylight. Night begins in ${countdown}.`;
-    } else {
-      mainText2.textContent = `Boston is still in daylight.`;
-    }
+    mainText2.textContent = `Boston is still in daylight. Night begins in ${countdown}.`;
+  } else {
+    mainText2.textContent = `Boston is still in daylight.`;
   }
+} else {
+  mainText2.innerHTML = `Night has fallen in Boston.<br>Use your hands to connect the stars.`;
+}
   
 if (mainText2) {
   if (weatherState.isDay) {
     mainText2.style.color = "black";
   } else {
-    mainText2.style.color = "white";
+    mainText2.style.color = "black";
   }
 }
 }
@@ -225,9 +204,9 @@ setInterval(fetchWeatherData, 10 * 60 * 1000);
 const starLayer = document.querySelector("#starLayer");
 let stars = [];
 
-// // =================================================
-// // 🌟 Generate stars
-// // =================================================
+// =================================================
+// 🌟 Generate stars
+// =================================================
 // const starImages = [
 //   "./img/star.png",
 // ];
@@ -246,8 +225,8 @@ let stars = [];
 //     star.src = starImages[randomIndex];
 
 //     // 📍 随机位置
-//    const CANVAS_WIDTH = 2500;
-//    const CANVAS_HEIGHT = 2000;
+//    const CANVAS_WIDTH = 1980;
+//    const CANVAS_HEIGHT = 1080;
 
 //    const x = Math.random() * CANVAS_WIDTH;
 //    const y = Math.random() * CANVAS_HEIGHT;
@@ -268,45 +247,6 @@ let stars = [];
 //   }
 // }
 
-// const rainLayer = document.querySelector("#rainLayer");
-// let rainDrops = [];
-// function makeDraggable(el) {
-//   let isDragging = false;
-//   let offsetX = 0;
-//   let offsetY = 0;
-
-//   el.addEventListener("mousedown", (e) => {
-//     isDragging = true;
-
-//     // 记录鼠标点击位置和元素左上角的偏移
-//     offsetX = e.clientX + window.scrollX - el.offsetLeft;
-//     offsetY = e.clientY + window.scrollY - el.offsetTop;
-
-//     el.style.cursor = "grabbing";
-//     el.style.zIndex = "20";
-//   });
-
-//   document.addEventListener("mousemove", (e) => {
-//     if (!isDragging) return;
-
-//     const x = e.clientX + window.scrollX - offsetX;
-//     const y = e.clientY + window.scrollY - offsetY;
-
-//     el.style.left = x + "px";
-//     el.style.top = y + "px";
-//   });
-
-//   document.addEventListener("mouseup", () => {
-//     if (!isDragging) return;
-
-//     isDragging = false;
-//     el.style.cursor = "grab";
-//     el.style.zIndex = "2";
-//   });
-// }
-// =================================================
-// Drag
-// =================================================
 import {
   FilesetResolver,
   GestureRecognizer
@@ -333,26 +273,25 @@ let handPositions = {
 // =================================================
 // 📸 Webcam setup
 // =================================================
-let stream = null;
+const stream = await navigator.mediaDevices.getUserMedia({
+  video: { facingMode: "user" }
+});
 
-async function startCamera() {
-  if (stream) return;
+video.srcObject = stream;
+await video.play();
+// let stream = null;
 
-  stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "user" }
-  });
+// async function startCamera() {
+//   if (stream) return;
 
-  video.srcObject = stream;
-  await video.play();
-}
+//   stream = await navigator.mediaDevices.getUserMedia({
+//     video: { facingMode: "user" }
+//   });
 
-function stopCamera() {
-  if (!stream) return;
+//   video.srcObject = stream;
+//   await video.play();
+// }
 
-  stream.getTracks().forEach(track => track.stop());
-  video.srcObject = null;
-  stream = null;
-}
 // =================================================
 // ✔️ Mediapipe
 // =================================================
@@ -380,7 +319,15 @@ function dist(x1, y1, x2, y2) {
 // =================================================
 // ✔️ Main Loop
 // =================================================
+function isNightMode() {
+  return document.body.classList.contains("night-mode");
+}
+
 async function loop() {
+  if (!isNightMode() || !stream) {
+    requestAnimationFrame(loop);
+    return;
+  }
   const result = await recognizer.recognize(video);
 
   if (result.landmarks && result.landmarks.length > 0) {
@@ -461,28 +408,28 @@ async function loop() {
   // =================================================
   // ✔️ Proximity Check
   // =================================================
-  const arr = Array.from(boxes);
+  // const arr = Array.from(boxes);
 
-  for (let i = 0; i < arr.length; i++) {
-    for (let j = i + 1; j < arr.length; j++) {
+  // for (let i = 0; i < arr.length; i++) {
+  //   for (let j = i + 1; j < arr.length; j++) {
 
-      const a = arr[i].getBoundingClientRect();
-      const b = arr[j].getBoundingClientRect();
+  //     const a = arr[i].getBoundingClientRect();
+  //     const b = arr[j].getBoundingClientRect();
 
-      const ax = a.left + a.width / 2;
-      const ay = a.top + a.height / 2;
+  //     const ax = a.left + a.width / 2;
+  //     const ay = a.top + a.height / 2;
 
-      const bx = b.left + b.width / 2;
-      const by = b.top + b.height / 2;
+  //     const bx = b.left + b.width / 2;
+  //     const by = b.top + b.height / 2;
 
-      // =================================================
-      // 🤲 Distance trigger
-      // =================================================
-      if (dist(ax, ay, bx, by) < 120) {
-        document.querySelector("#special").style.display = "block";
-      }
-    }
-  }
+  //     // =================================================
+  //     // 🤲 Distance trigger
+  //     // =================================================
+  //     if (dist(ax, ay, bx, by) < 120) {
+  //       document.querySelector("#special").style.display = "block";
+  //     }
+  //   }
+  // }
 
   requestAnimationFrame(loop);
 }
