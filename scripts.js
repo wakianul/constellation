@@ -72,13 +72,6 @@ function updateImage() {
 
   image.style.display = "block";
 
-  if (weatherState.isRain) {
-    image.alt = "Rain mode";
-    image.removeAttribute("src");
-  } else {
-    image.alt = "Night mode";
-    image.removeAttribute("src");
-  }
 }
 
 // =================================================
@@ -101,6 +94,7 @@ async function fetchWeatherData() {
     const daily = data.daily;
 
     weatherState.isDay = current?.is_day === 1;
+    // weatherState.isDay = false; // 🔥 强制夜晚
     weatherState.temperature = current?.temperature_2m ?? null;
     weatherState.sunrise = daily?.sunrise?.[0] || null;
     weatherState.sunset = daily?.sunset?.[0] || null;
@@ -176,7 +170,7 @@ function updateDateTime() {
     const msLeft = sunsetTime - now;
     const countdown = formatTimeLeft(msLeft);
 
-    mainText2.textContent = `Boston is still in daylight. Night begins in ${countdown}.`;
+    mainText2.textContent = `Boston is still in daylight.`;
   } else {
     mainText2.textContent = `Boston is still in daylight.`;
   }
@@ -252,8 +246,10 @@ import {
   GestureRecognizer
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-const video = document.getElementById("video");
 const boxes = document.querySelectorAll(".draggable");
+const videoPopup = document.getElementById("videoPopup");
+const popupVideo = document.getElementById("popupVideo");
+const special = document.getElementById("special");
 
 
 // =================================================
@@ -263,6 +259,7 @@ const handState = {
   0: { selected: null, grabbing: false },
   1: { selected: null, grabbing: false }
 };
+let starsAreTouching = false;
 
 let handPositions = {
   0: { x: 0, y: 0 },
@@ -314,7 +311,31 @@ const recognizer = await GestureRecognizer.createFromOptions(vision, {
 function dist(x1, y1, x2, y2) {
   return Math.hypot(x1 - x2, y1 - y2);
 }
+function checkStarTouch() {
+  const boxes = Array.from(document.querySelectorAll(".draggable"));
+  const threshold = 30;
 
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i].getBoundingClientRect();
+      const b = boxes[j].getBoundingClientRect();
+
+      const ax = a.left + a.width / 2;
+      const ay = a.top + a.height / 2;
+
+      const bx = b.left + b.width / 2;
+      const by = b.top + b.height / 2;
+
+      const d = Math.hypot(ax - bx, ay - by);
+
+      if (d < threshold) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 // =================================================
 // ✔️ Main Loop
@@ -430,6 +451,21 @@ async function loop() {
   //     }
   //   }
   // }
+const touchingNow = checkStarTouch();
+const special = document.querySelector("#special");
+
+if (touchingNow && !starsAreTouching) {
+  starsAreTouching = true;
+
+  special.style.display = "block";
+  special.textContent = "A connection appears.";
+}
+
+if (!touchingNow && starsAreTouching) {
+  starsAreTouching = false;
+
+  special.style.display = "none";
+}
 
   requestAnimationFrame(loop);
 }

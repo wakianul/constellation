@@ -18,21 +18,44 @@
         <div id="main-canvas">
             <div id="mainText1"></div>
             <div id="mainText2"></div>
+              <div id="special"></div>
 
-            <div class="box draggable" style="left:100px; top:100px;"><img style="width: 105%;" src="./img/black star.png"></div>
-            <div class="box draggable" style="left:400px; top:250px;"><img style="width: 70%;" src="./img/Star 1.png"></div>
-            <div class="box draggable" style="left:1400px; top:800px;"><img style="width: 100%;" src="./img/Star 2.png"></div>
-            <div class="box draggable" style="left:400px; top:700px;"><img style="width: 65%;" src="./img/black star.png"></div>
-            <div class="box draggable" style="left:1000px; top:400px;"><img style="width: 100%;" src="./img/Star 1.png"></div>
-            <div class="box draggable" style="left:1500px; top:120px;"><img style="width: 80%;rotate: 15;" src="./img/Star 2.png"></div>
-            <div class="box draggable" style="left:300px; top:720px;"><img style="width: 90%;" src="./img/star.png"></div>
+        <div class="box draggable" data-id="memory" style="left:100px; top:100px;">
+        <img style="width: 105%;" src="./img/black star.png">
+        </div>
+
+        <div class="box draggable" data-id="time" style="left:400px; top:250px;">
+        <img style="width: 70%;" src="./img/Star 1.png">
+        </div>
+
+        <div class="box draggable" data-id="place" style="left:1400px; top:800px;">
+        <img style="width: 100%;" src="./img/Star 2.png">
+        </div>
+
+        <div class="box draggable" data-id="encounter" style="left:400px; top:700px;">
+        <img style="width: 65%;" src="./img/black star.png">
+        </div>
+
+        <div class="box draggable" data-id="transform" style="left:1150px; top:400px;">
+        <img style="width: 100%;" src="./img/Star 1.png">
+        </div>
+
+        <div class="box draggable" data-id="reflect" style="left:1500px; top:120px;">
+        <img style="width: 80%; transform: rotate(0deg);" src="./img/Star 2.png">
+        </div>
+
+        <div class="box draggable" data-id="constellation" style="left:300px; top:720px;">
+        <img style="width: 90%;" src="./img/star.png">
+        </div>
 
             <div id="starLayer"></div>
         </div>
 
         <div id="left" class="handUI"></div>
         <div id="right" class="handUI"></div>
-        
+        <div id="videoPopup">
+            <video id="popupVideo" src="./video/boston.mp4" muted playsinline></video>
+        </div>
     </div>
 
     <script type="module" src="scripts.js"></script>

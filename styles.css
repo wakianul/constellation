@@ -74,13 +74,12 @@ body.day-mode #webcam-container {
   font-family: 'variableFont';
   font-size: 30px;
   color: white;
-  text-align: center;
+  text-align: left;
   position: fixed;
   z-index: 10;
   top: 20px;
   left: 20px;
   font-variation-settings: "wght" 103.5041;
-  transition: all 1s ease-in-out;
 }
 
 #mainText2 {
@@ -99,19 +98,17 @@ body.day-mode #webcam-container {
 body.day-mode #mainText1 {
   top: 10px;
   left: 10px;
-  transform: translateX(-50%);
-  font-size: 24px;
+  font-size: 30px;
   color: black;
-  width: 70%;
 }
 
 body.day-mode #mainText2 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 48px;
+  font-size: 40px;
   color: black;
-  width: 80%;
+  font-variation-settings: "wght" 70;
 }
 
 /* 晚上文字状态 */
@@ -128,7 +125,7 @@ body.night-mode #mainText2 {
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 60px;
+  font-size: 50px;
   color: white;
   width: 100%;
 }
@@ -196,8 +193,23 @@ body.night-mode .box {
 }
 
 
+#videoPopup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+#videoPopup video {
+  width: 60vw;
+  max-width: 900px;
+}
+
 /* star layer ================================================ */
-#starLayer {
+/* #starLayer {
   position: fixed;
   inset: 0;
   z-index: 2;
@@ -210,20 +222,21 @@ body.day-mode #starLayer {
 
 body.night-mode #starLayer {
   display: block;
-}
+} */
 
 
 /* Show ================================================ */
 #special {
   display: none;
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 65%;
   left: 50%;
-  transform: translate(-50%, 0);
-  width: 100%;
+  transform: translate(-50%, -50%);
   font-family: 'variableFont';
-  font-size: 100px;
-  color: red;
+  font-size: 60px;
+  color: white;
   text-align: center;
-  z-index: 20;
+  z-index: 30;
+  pointer-events: none;
+  font-variation-settings: "wght" 50;
 }
