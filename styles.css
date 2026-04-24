@@ -26,6 +26,14 @@ body {
   background-size: cover;
 }
 
+#universe {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 body.day-mode {
   background: white;
   color: black;
@@ -106,7 +114,7 @@ body.day-mode #mainText2 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 40px;
+  font-size: 60px;
   color: black;
   font-variation-settings: "wght" 70;
 }
@@ -172,7 +180,7 @@ body.night-mode .handUI {
 
 /* Item ================================================ */
 .box {
-  position: absolute;
+  position: fixed;
   width: 80px;
   height: 80px;
   color: white;
@@ -192,6 +200,13 @@ body.night-mode .box {
   display: flex;
 }
 
+.draggable {
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8))
+          drop-shadow(0 0 12px rgba(255,255,255,0.5));
+}
+.draggable:hover {
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.9));
+}
 
 #videoPopup {
   display: none;

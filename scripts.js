@@ -103,11 +103,11 @@ async function fetchWeatherData() {
 
     applyTheme();
 
-    if (weatherState.isDay) {
-      stopCamera();
-    } else {
-      await startCamera();
-    }
+    // if (weatherState.isDay) {
+    //   stopCamera();
+    // } else {
+    //   await startCamera();
+    // }
 
     updateStars();
     updateImage();
@@ -163,22 +163,26 @@ function updateDateTime() {
   // =================================================
   // ✅ ➋ mainText2: day / night / rain logic
   // =================================================
-  const mainText2 = document.querySelector("#mainText2");
-  if (!mainText2) return;
+ const mainText2 = document.querySelector("#mainText2");
+if (!mainText2) return;
 
-  if (weatherState.isDay) {
+if (weatherState.isDay) {
+
   if (weatherState.sunset) {
     const sunsetTime = new Date(weatherState.sunset);
     const msLeft = sunsetTime - now;
     const countdown = formatTimeLeft(msLeft);
 
-    mainText2.textContent = `Boston is still in daylight.`;
+    mainText2.innerHTML = `The stars are hidden in daylight.<br>They will appear in ${countdown}.`;
   } else {
-    mainText2.textContent = `Boston is still in daylight.`;
+    mainText2.textContent = `The stars are hidden in daylight.`;
   }
+
 } else {
   mainText2.innerHTML = `Night has fallen in Boston.<br>Use your hands to connect the stars.`;
 }
+
+mainText2.style.color = weatherState.isDay ? "black" : "white";
   
 if (mainText2) {
   if (weatherState.isDay) {
@@ -291,19 +295,27 @@ function checkStarTouch() {
 
       const ax = a.left + a.width / 2;
       const ay = a.top + a.height / 2;
-
       const bx = b.left + b.width / 2;
       const by = b.top + b.height / 2;
 
       const d = Math.hypot(ax - bx, ay - by);
 
       if (d < threshold) {
-        return true;
+        const idA = boxes[i].dataset.id;
+        const idB = boxes[j].dataset.id;
+
+        return {
+          touching: true,
+          key: [idA, idB].sort().join("-")
+        };
       }
     }
   }
 
-  return false;
+  return {
+    touching: false,
+    key: null
+  };
 }
 
 // =================================================
@@ -457,41 +469,7 @@ if (!touchResult.touching && starsAreTouching) {
   special.textContent = "";
 }
 
-function checkStarTouch() {
-  const boxes = Array.from(document.querySelectorAll(".draggable"));
-  const threshold = 30;
-
-  for (let i = 0; i < boxes.length; i++) {
-    for (let j = i + 1; j < boxes.length; j++) {
-      const a = boxes[i].getBoundingClientRect();
-      const b = boxes[j].getBoundingClientRect();
-
-      const ax = a.left + a.width / 2;
-      const ay = a.top + a.height / 2;
-      const bx = b.left + b.width / 2;
-      const by = b.top + b.height / 2;
-
-      const d = Math.hypot(ax - bx, ay - by);
-
-      if (d < threshold) {
-        const idA = boxes[i].dataset.id;
-        const idB = boxes[j].dataset.id;
-
-        return {
-          touching: true,
-          key: [idA, idB].sort().join("-")
-        };
-      }
-    }
-  }
-
-  return {
-    touching: false,
-    key: null
-  };
-}
-
-  requestAnimationFrame(loop);
+requestAnimationFrame(loop);
 }
 
 loop();
