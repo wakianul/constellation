@@ -1,4 +1,6 @@
-// =================================================
+let lastTriggerTime = 0;
+const TRIGGER_DELAY = 800; // 0.8秒
+// // =================================================
 // 📍 Boston coordinates
 // =================================================
 const BOSTON = {
@@ -195,51 +197,6 @@ setInterval(updateDateTime, 1000);
 setInterval(fetchWeatherData, 10 * 60 * 1000);
 
 
-const starLayer = document.querySelector("#starLayer");
-let stars = [];
-
-// =================================================
-// 🌟 Generate stars
-// =================================================
-// const starImages = [
-//   "./img/star.png",
-// ];
-
-// function generateStars(count = 60) {
-//   starLayer.innerHTML = "";
-//   stars = [];
-
-//   for (let i = 0; i < count; i++) {
-
-//     const star = document.createElement("img");
-//     star.classList.add("star", "draggable");
-
-//     // 🎲 随机选一张图片
-//     const randomIndex = Math.floor(Math.random() * starImages.length);
-//     star.src = starImages[randomIndex];
-
-//     // 📍 随机位置
-//    const CANVAS_WIDTH = 1980;
-//    const CANVAS_HEIGHT = 1080;
-
-//    const x = Math.random() * CANVAS_WIDTH;
-//    const y = Math.random() * CANVAS_HEIGHT;
-
-//     star.style.left = x + "px";
-//     star.style.top = y + "px";
-
-//     // 📏 随机大小（比 emoji 更重要）
-//     const size = 10 + Math.random() * 60;
-//     star.style.width = size + "px";
-
-//     // 🌫 随机透明度
-//     star.style.opacity = 0.5 + Math.random() * 0.5;
-
-//   starLayer.appendChild(star);
-//   stars.push(star);
-
-//   }
-// }
 
 import {
   FilesetResolver,
@@ -259,13 +216,25 @@ const handState = {
   0: { selected: null, grabbing: false },
   1: { selected: null, grabbing: false }
 };
-let starsAreTouching = false;
 
 let handPositions = {
   0: { x: 0, y: 0 },
   1: { x: 0, y: 0 }
 };
 
+let starsAreTouching = false;
+let currentConnectionKey = null;
+
+const connectionMessages = {
+  "memory-time": "Between memory and time, meaning begins.",
+  "memory-place": "A place becomes part of what is remembered.",
+  "place-time": "We locate ourselves between place and time.",
+  "encounter-transform": "An encounter initiates transformation.",
+  "encounter-reflect": "Connection reveals through reflection.",
+  "reflect-transform": "Through reflection, form continues to shift.",
+  "constellation-encounter": "A connection begins to take shape.",
+  "constellation-memory": "The constellation slowly emerges."
+};
 
 // =================================================
 // 📸 Webcam setup
@@ -451,20 +420,75 @@ async function loop() {
   //     }
   //   }
   // }
-const touchingNow = checkStarTouch();
+// const touchingNow = checkStarTouch();
+// const special = document.querySelector("#special");
+
+// if (touchingNow && !starsAreTouching) {
+//   starsAreTouching = true;
+
+//   special.style.display = "block";
+//   special.textContent = "A connection appears.";
+// }
+
+// if (!touchingNow && starsAreTouching) {
+//   starsAreTouching = false;
+
+//   special.style.display = "none";
+// }
+const touchResult = checkStarTouch();
 const special = document.querySelector("#special");
 
-if (touchingNow && !starsAreTouching) {
+if (touchResult.touching && touchResult.key !== currentConnectionKey) {
   starsAreTouching = true;
+  currentConnectionKey = touchResult.key;
+
+  const message =
+    connectionMessages[touchResult.key] || "A connection appears.";
 
   special.style.display = "block";
-  special.textContent = "A connection appears.";
+  special.textContent = message;
 }
 
-if (!touchingNow && starsAreTouching) {
+if (!touchResult.touching && starsAreTouching) {
   starsAreTouching = false;
+  currentConnectionKey = null;
 
   special.style.display = "none";
+  special.textContent = "";
+}
+
+function checkStarTouch() {
+  const boxes = Array.from(document.querySelectorAll(".draggable"));
+  const threshold = 30;
+
+  for (let i = 0; i < boxes.length; i++) {
+    for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i].getBoundingClientRect();
+      const b = boxes[j].getBoundingClientRect();
+
+      const ax = a.left + a.width / 2;
+      const ay = a.top + a.height / 2;
+      const bx = b.left + b.width / 2;
+      const by = b.top + b.height / 2;
+
+      const d = Math.hypot(ax - bx, ay - by);
+
+      if (d < threshold) {
+        const idA = boxes[i].dataset.id;
+        const idB = boxes[j].dataset.id;
+
+        return {
+          touching: true,
+          key: [idA, idB].sort().join("-")
+        };
+      }
+    }
+  }
+
+  return {
+    touching: false,
+    key: null
+  };
 }
 
   requestAnimationFrame(loop);
