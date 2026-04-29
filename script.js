@@ -118,7 +118,7 @@ async function fetchWeatherData() {
     weatherState.weatherCode = current.weather_code;
     weatherState.temperature = current.temperature_2m;
     weatherState.isDay = current.is_day === 1;
-    // weatherState.isDay = false; // 🔥 强制夜晚
+  // weatherState.isDay = false; // 🔥 强制夜晚
   // weatherState.isRain = isRainCode(current.weather_code);
     weatherState.sunrise = daily?.sunrise?.[0] || null;
     weatherState.suns = daily?.sunset?.[0] || null;

@@ -96,7 +96,7 @@ async function fetchWeatherData() {
     const daily = data.daily;
 
     weatherState.isDay = current?.is_day === 1;
-    // weatherState.isDay = false; // 🔥 强制夜晚
+    // weatherState.isDay = true; // 🔥 强制夜晚
     weatherState.temperature = current?.temperature_2m ?? null;
     weatherState.sunrise = daily?.sunrise?.[0] || null;
     weatherState.sunset = daily?.sunset?.[0] || null;
@@ -152,7 +152,7 @@ function updateDateTime() {
   // =================================================
   const mainText1 = document.querySelector("#mainText1");
   if (mainText1) {
-    mainText1.textContent = `${dayName}, ${month}/${date}/${year}, ${hour}:${minute}:${second} ${ampm}`;
+    mainText1.textContent = `${month}/${date}/${year}  ${hour}:${minute}:${second} ${ampm}`;
   }
  // 根据昼夜改变颜色
   if (weatherState.isDay) {

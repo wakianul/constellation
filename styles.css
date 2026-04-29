@@ -11,12 +11,12 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 body {
   display: flex;
-  overflow: hidden;
+  overflow: visible;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -87,7 +87,7 @@ body.day-mode #webcam-container {
   z-index: 10;
   top: 20px;
   left: 20px;
-  font-variation-settings: "wght" 103.5041;
+  font-variation-settings: "wght" 105;
 }
 
 #mainText2 {
@@ -116,7 +116,7 @@ body.day-mode #mainText2 {
   transform: translate(-50%, -50%);
   font-size: 60px;
   color: black;
-  font-variation-settings: "wght" 70;
+  font-variation-settings: "wght" 80;
 }
 
 /* 晚上文字状态 */
@@ -124,18 +124,23 @@ body.night-mode #mainText1 {
   top: 10px;
   left: 10px;
   transform: none;
-  font-size: 30px;
+  font-size: 40px;
   color: white;
   width: auto;
+   text-shadow: 
+    0 0 6px rgba(200, 200, 200, 0.3),
+    0 0 12px rgba(200, 200, 200, 0.2);
+
 }
 
 body.night-mode #mainText2 {
   top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 50px;
+  font-size: 60px;
   color: white;
   width: 100%;
+  font-variation-settings: "wght" 100;
 }
 
 
